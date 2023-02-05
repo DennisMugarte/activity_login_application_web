@@ -22,6 +22,14 @@ app.use(bodyParser.urlencoded({
 
 app.use(bodyParser.json());
 
+app.use(myconnection(mysql, {
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    port: 3306,
+    database: ''
+}))
+
 app.listen(app.get('port'), () => {
     console.log('Listening on port', app.get('port'));
 });
