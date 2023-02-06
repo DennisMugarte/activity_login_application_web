@@ -5,6 +5,8 @@ const mysql = require('mysql');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 
+const loginRoutes = require('./routes/login');
+
 const app = express();
 app.set('port', 4000);
 
@@ -12,7 +14,6 @@ app.set('views', __dirname + '/views');
 app.engine('.hbs', engine({
     extname: '.hbs',
 }));
-
 
 app.set('view engine', 'hbs');
 
@@ -39,6 +40,8 @@ app.use(session({
 app.listen(app.get('port'), () => {
     console.log('Listening on port', app.get('port'));
 });
+
+app.use('/', loginRoutes)
 
 app.get('/', (req, res) => {
     res.render(`home`);
