@@ -29,7 +29,12 @@ function dato_usuario(req, res) {
 
     const data = req.body;
     bcrypt.hash(data.password, 12).then(hash => {
-        console.log(hash);
+        data.password = hash;
+        req.getConnection((err, conn) => {
+            conn.query('SELECT * FROM users WHERE email = ?', [data], (err, rows) => {
+                res.redirect('/');
+            });
+        });
     });
 }
 
