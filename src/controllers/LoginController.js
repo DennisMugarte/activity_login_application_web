@@ -8,6 +8,27 @@ function login(req, res) {
     }
 }
 
+function auth(req, res) {
+    const data = req.body;
+    res.render('login/register');
+
+    req.getConnection((err, conn) => {
+        conn.query('SELECT * FROM users WHERE email = ?', [data.email], (err, userdata) => {
+            if (userdata.length > 0) {
+                bcrypt.compare(data.password, userdata.password, (err, isMatcg) => {
+                    if (!isMatch) {
+                        res.render('login/index', { error: 'Error: ¡Contraseña incorrecta!' });
+                    } else {
+                        console.log('¡Bienvenido!');
+                    }
+                })
+            } else {
+                res.render('login/index', { error: 'Error: ¡El usuario ya existe!' });
+            }
+        });
+    });
+}
+
 function registro(req, res) {
     res.render('login/register');
 }
@@ -28,14 +49,23 @@ function dato_usuario(req, res) {
     // });
 
     const data = req.body;
-    bcrypt.hash(data.password, 12).then(hash => {
-        data.password = hash;
-        req.getConnection((err, conn) => {
-            conn.query('SELECT * FROM users WHERE email = ?', [data], (err, rows) => {
-                res.redirect('/');
-            });
+    req.getConnection((err, conn) => {
+        conn.query('SELECT * FROM users WHERE email = ?', [data.email], (err, userdata) => {
+            if (userdata.length > 0) {
+                res.render('login/register', { error: 'Error: ¡El usuario ya existe!' });
+            } else {
+                bcrypt.hash(data.password, 12).then(hash => {
+                    data.password = hash;
+                    req.getConnection((err, conn) => {
+                        conn.query('SELECT * FROM users WHERE email = ?', [data], (err, rows) => {
+                            res.redirect('/');
+                        });
+                    });
+                });
+            }
         });
     });
+
 }
 
 function cerrar_sesion(req, res) {
@@ -49,5 +79,7 @@ module.exports = {
     login,
     registro,
     dato_usuario,
+
     cerrar_sesion,
+    auth
 }

@@ -12,5 +12,9 @@
             required>
         <button type="submit"
             class="rouded-md bg-green-500 w-full text-lg text-white font-semibold p-2 my-3 hover:bg-green-600 focus:bg-green-700">Continuar</button>
+
+        {{#if error}}
+        <p class="text-red-500 font-bold text-lg my-3"> *{{error}}</p>
+        {{/if}}
     </form>
 </div>
