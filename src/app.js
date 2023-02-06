@@ -27,8 +27,14 @@ app.use(myconnection(mysql, {
     user: 'root',
     password: '',
     port: 3306,
-    database: ''
+    database: 'nodelogin'
 }))
+
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
 
 app.listen(app.get('port'), () => {
     console.log('Listening on port', app.get('port'));
