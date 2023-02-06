@@ -4,6 +4,7 @@ const myconnection = require('express-myconnection');
 const mysql = require('mysql');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const { redirect } = require('express/lib/response');
 
 const loginRoutes = require('./routes/login');
 
@@ -29,7 +30,7 @@ app.use(myconnection(mysql, {
     password: '',
     port: 3306,
     database: 'nodelogin'
-}))
+}, 'single'));
 
 app.use(session({
     secret: 'secret',
@@ -44,5 +45,9 @@ app.listen(app.get('port'), () => {
 app.use('/', loginRoutes)
 
 app.get('/', (req, res) => {
-    res.render(`home`);
+    if (req.session.loggedin) {
+        let name = req.session.name;
+    } else {
+        res.redirect('/login');
+    }
 });
