@@ -1,4 +1,6 @@
-function index(req, res) {
+const bcrypt = require('bcrypt');
+
+function login(req, res) {
     if (req.session.loggedin) {
         res.redirect('/');
     } else {
@@ -6,31 +8,32 @@ function index(req, res) {
     }
 }
 
-function register(req, res) {
+function registro(req, res) {
     res.render('login/register');
 }
 
-function auth(req, res) {
-    let email = req.body.email;
-    let password = req.body.password;
+function dato_usuario(req, res) {
+    // let email = req.body.email;
+    // let password = req.body.password;
 
-    req.getConnection((err, conn) => {
-        conn.query('SELECT * FROM users WHERE email = ?', [email], (err, rows) => {
-            if (rows.length > 0) {
-                console.log(rows);
-            } else {
-                console.log('not');
-            }
-            /*
-            req.session.loggedin = true;
-          req.session.name = name;
-        res.redirect('/');*/
+    // req.getConnection((err, conn) => {
+    //     conn.query('SELECT * FROM users WHERE email = ?', [email], (err, rows) => {
+    //         if (rows.length > 0) {
+    //             console.log(rows);
+    //         } else {
+    //             console.log('not');
+    //         }
 
-        });
+    //     });
+    // });
+
+    const data = req.body;
+    bcrypt.hash(data.password, 12).then(hash => {
+        console.log(hash);
     });
 }
 
-function logout(req, res) {
+function cerrar_sesion(req, res) {
     if (req.session.loggedin) {
         req.session.destroy();
     }
@@ -38,8 +41,8 @@ function logout(req, res) {
 }
 
 module.exports = {
-    index: index,
-    register: register,
-    auth: auth,
-    logout: logout,
+    login,
+    registro,
+    dato_usuario,
+    cerrar_sesion,
 }

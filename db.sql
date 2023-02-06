@@ -1,8 +1,10 @@
-CREATE DATABASE IF NOT EXISTS `Loginjs` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `loginjs`;
+CREATE TABLE IF NOT EXISTS nodelogin;
 
-  CREATE TABLE IF NOT EXISTS `uusuarios` (
-    `email` varchar(100) NOT NULL PRIMARY KEY,
-    `nombre` varchar(50) NOT NULL,
-    `Contraseña` varchar(255) NOT NULL,
-  );
+USE nodelogin;
+
+CREATE TABLE
+    IF NOT EXISTS users (
+        email VARCHAR(250) NOT NULL PRIMARY KEY,
+        name VARCHAR(50) NOT NULL,
+        password VARCHAR(255) NOT NULL
+    )
