@@ -1,10 +1,10 @@
 const bcrypt = require('bcrypt');
 
 function login(req, res) {
-    if (req.session.loggedin) {
-        res.redirect('/');
-    } else {
+    if (req.session.loggedin != true) {
         res.render('login/index');
+    } else {
+        res.redirect('/');
     }
 }
 
@@ -15,39 +15,35 @@ function auth(req, res) {
     req.getConnection((err, conn) => {
         conn.query('SELECT * FROM users WHERE email = ?', [data.email], (err, userdata) => {
             if (userdata.length > 0) {
-                bcrypt.compare(data.password, userdata.password, (err, isMatcg) => {
-                    if (!isMatch) {
-                        res.render('login/index', { error: 'Error: ¡Contraseña incorrecta!' });
-                    } else {
-                        console.log('¡Bienvenido!');
-                    }
-                })
+                userdata.forEach(element => {
+                    bcrypt.compare(data.password, element.password, (err, isMatch) => {
+                        if (!isMatch) {
+                            res.render('login/index', { error: 'Error: ¡Contraseña incorrecta!' });
+                        } else {
+                            req.session.loggedin = true;
+                            req.session.name = element.name;
+
+                            res.redirect('/');
+                        }
+                    });
+                });
             } else {
                 res.render('login/index', { error: 'Error: ¡El usuario ya existe!' });
             }
+
         });
     });
 }
 
 function registro(req, res) {
-    res.render('login/register');
+    if (req.session.loggedin != true) {
+        res.render('login/register');
+    } else {
+        res.redirect('/');
+    }
 }
 
 function dato_usuario(req, res) {
-    // let email = req.body.email;
-    // let password = req.body.password;
-
-    // req.getConnection((err, conn) => {
-    //     conn.query('SELECT * FROM users WHERE email = ?', [email], (err, rows) => {
-    //         if (rows.length > 0) {
-    //             console.log(rows);
-    //         } else {
-    //             console.log('not');
-    //         }
-
-    //     });
-    // });
-
     const data = req.body;
     req.getConnection((err, conn) => {
         conn.query('SELECT * FROM users WHERE email = ?', [data.email], (err, userdata) => {
