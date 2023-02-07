@@ -10,7 +10,6 @@ function login(req, res) {
 
 function auth(req, res) {
     const data = req.body;
-    res.render('login/register');
 
     req.getConnection((err, conn) => {
         conn.query('SELECT * FROM users WHERE email = ?', [data.email], (err, userdata) => {
@@ -35,7 +34,8 @@ function auth(req, res) {
     });
 }
 
-function registro(req, res) {
+//register
+function register(req, res) {
     if (req.session.loggedin != true) {
         res.render('login/register');
     } else {
@@ -43,7 +43,8 @@ function registro(req, res) {
     }
 }
 
-function dato_usuario(req, res) {
+//storeUser
+function storeUser(req, res) {
     const data = req.body;
     req.getConnection((err, conn) => {
         conn.query('SELECT * FROM users WHERE email = ?', [data.email], (err, userdata) => {
@@ -54,6 +55,10 @@ function dato_usuario(req, res) {
                     data.password = hash;
                     req.getConnection((err, conn) => {
                         conn.query('SELECT * FROM users WHERE email = ?', [data], (err, rows) => {
+
+                            req.session.loggedin = true;
+                            req.session.name = data.name;
+
                             res.redirect('/');
                         });
                     });
@@ -64,18 +69,21 @@ function dato_usuario(req, res) {
 
 }
 
-function cerrar_sesion(req, res) {
-    if (req.session.loggedin) {
+
+//logout
+function logout(req, res) {
+    if (req.session.loggedin == true) {
         req.session.destroy();
+    } else {
+        res.redirect('/login');
     }
-    res.redirect('/');
+
 }
 
 module.exports = {
     login,
-    registro,
-    dato_usuario,
-
-    cerrar_sesion,
+    register,
+    storeUser,
+    logout,
     auth
 }
