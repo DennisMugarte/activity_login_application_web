@@ -10,7 +10,7 @@
     .container{
         height: 100vh;
         width: 100%;
-        background-color: rgb(253, 253, 253);
+        background-color: rgb(154, 241, 230);
         font-family: 'share Tech', sans-serif;
         position: relative;
     }
@@ -25,6 +25,14 @@ font-size: 3.8rem;
         align-items: center;
         justify-content: space-between;
         padding: 10px 50px;
+    }
+    ul li{
+        display: inline-block;
+        list-style: none;
+        padding: 6px 28px;
+        font-size: 1.7rem;
+        transition: all 0.3s ease 0s;
+
     }
     header{
         position: absolute;
@@ -42,10 +50,4 @@ font-size: 3.8rem;
         font-size: 2rem;
         
     }
-    .container.imgen{
-        position: absolute;
-        height: 600px;
-        width: 550px;
-        right: 7%;
-        z-index: 999;
-    }
+    
