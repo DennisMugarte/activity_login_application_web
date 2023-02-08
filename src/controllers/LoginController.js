@@ -34,7 +34,7 @@ function auth(req, res) {
     });
 }
 
-//register
+//register   Registro
 function register(req, res) {
     if (req.session.loggedin != true) {
         res.render('login/register');
@@ -43,7 +43,7 @@ function register(req, res) {
     }
 }
 
-//storeUser
+//storeUser    Usuario
 function storeUser(req, res) {
     const data = req.body;
     req.getConnection((err, conn) => {
@@ -54,7 +54,7 @@ function storeUser(req, res) {
                 bcrypt.hash(data.password, 12).then(hash => {
                     data.password = hash;
                     req.getConnection((err, conn) => {
-                        conn.query('SELECT * FROM users WHERE email = ?', [data], (err, rows) => {
+                        conn.query('INSERT INTO users SET ?', [data], (err, rows) => {
 
                             req.session.loggedin = true;
                             req.session.name = data.name;
@@ -74,11 +74,11 @@ function storeUser(req, res) {
 function logout(req, res) {
     if (req.session.loggedin == true) {
         req.session.destroy();
-    } else {
-        res.redirect('/login');
     }
-
+    res.redirect('/login');
 }
+
+
 
 module.exports = {
     login,
